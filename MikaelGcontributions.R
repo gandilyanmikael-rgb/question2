@@ -1,8 +1,22 @@
+#Packages
 library(tidyverse)
 library(srvyr)
 library(gssr)
 library(gssrdoc)
 library(haven)
+#Data and Weights
+data(gss_all)
+gss_2024 <- gss_get_yr(year='2024')
+wt_vars <- c("vpsu",     # PSU
+             "vstrat",   # Strata          
+             "wtssps",   # Weights
+             "wtssnrps"  #  Weights with non-response adjustment
+)   
+
+# removing user-missing values and converting the weights to numeric
+gss<-gss|>
+  zap_missing()|>
+  mutate(across(wt_vars, .fns=~as.numeric(.x)))
 
 #age
 summary(gss_all$age)
@@ -83,16 +97,7 @@ gss_2024|>
 #age and sex?
 
 ####################ANALYSIS###########################
-#weight variables
-wt_vars <- c("vpsu",     # PSU
-             "vstrat",   # Strata          
-             "wtssps",   # Weights
-             "wtssnrps"  #  Weights with non-response adjustment
-)   
-# removing user-missing values and converting the weights to numeric
-gss_2024 <- gss_2024|>
-  zap_missing()|>
-  mutate(across(wt_vars, .fns=~as.numeric(.x)))
+
 #svygss
 svygss <- gss_2024|>
   as_survey_design(
