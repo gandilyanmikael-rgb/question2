@@ -14,7 +14,7 @@ wt_vars <- c("vpsu",     # PSU
 )   
 
 # removing user-missing values and converting the weights to numeric
-gss<-gss|>
+gss_2024 <-gss_2024|>
   zap_missing()|>
   mutate(across(wt_vars, .fns=~as.numeric(.x)))
 
@@ -113,7 +113,7 @@ propdata1 <- svygss|>
   summarise(
     prop = survey_mean(polviews3 == "Conservatives", vartype = "ci", na.rm = TRUE)
   )
-ggplot(propdata, aes(x = factor(gen_age), y = prop)) +
+ggplot(propdata1, aes(x = factor(gen_age), y = prop)) +
   geom_col(fill = "steelblue") +
   geom_errorbar(aes(ymin = prop_low, ymax = prop_upp), width = 0.2) +
   scale_y_continuous(labels = scales::percent) +
